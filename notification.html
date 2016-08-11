@@ -1,11 +1,169 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <title>新老方式处理web通知</title>
   </head>
   <body>
-
+    <tbody>
+<tr>
+<th scope="col" style="width:6em;">属性名</th>
+<th scope="col">释义</th>
+</tr>
+<tr>
+<td>dir</td>
+<td>默认值是<code>auto</code>, 可以是<code>ltr</code>或<code>rtl</code>，有点类似<a href="http://www.zhangxinxu.com/wordpress/2016/03/css-direction-introduction-apply/">direction属性</a>。表示提示主体内容的水平书写顺序。</td>
+</tr>
+<tr>
+<td>lang</td>
+<td>提示的语言。没看出来有什么用。大家可以忽略之~</td>
+</tr>
+<tr>
+<td>body</td>
+<td>提示主体内容。字符串。会在标题的下面显示。比方说上面的“好啊！(害羞.gif)”。</td>
+</tr>
+<tr>
+<td>tag</td>
+<td>字符串。标记当前通知的标签。</td>
+</tr>
+<tr>
+<td>icon</td>
+<td>字符串。通知面板左侧那个图标地址。</td>
+</tr>
+<tr>
+<td>data</td>
+<td>任意类型和通知相关联的数据。</td>
+</tr>
+<tr>
+<td>vibrate</td>
+<td>通知显示时候，设备震动硬件需要的<a href="https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API#Vibration_patterns" target="_blank">振动模式</a>。所谓振动模式，指的是一个描述交替时间的数组，分别表示振动和不振动的毫秒数，一直交替下去。例如[200, 100, 200]表示设备振动200毫秒，然后停止100毫秒，再振动200毫秒。</td>
+</tr>
+<tr>
+<td>renotify</td>
+<td>布尔值。新通知出现的时候是否替换之前的。如果设为<code>true</code>，则表示替换，表示当前标记的通知只会出现一个。注意都这里“当前标记”没？没错，<code>true</code>参数要想其作用，必须<code>tag</code>需要设置属性值。然后，通知就会像这样覆盖：<p></p>
+<p><img data-src="http://image.zhangxinxu.com/image/blog/201607/message-replace.gif" width="385" height="121" alt="女神弹框覆盖gif" class="alignnone" src="http://image.zhangxinxu.com/image/blog/201607/message-replace.gif"></p>
+<p>而不会是默认的叠高楼：</p>
+<p><img data-src="http://image.zhangxinxu.com/image/blog/201607/2016-07-05_233335.png" width="411" height="248" alt="叠高楼" class="alignnone" src="http://image.zhangxinxu.com/image/blog/201607/2016-07-05_233335.png"></p>
+</td>
+</tr>
+<tr>
+<td>silent</td>
+<td>布尔值。通知出现的时候，是否要有声音。默认<code>false</code>, 表示无声。</td>
+</tr>
+<tr>
+<td>sound</td>
+<td>字符串。音频地址。表示通知出现要播放的声音资源。</td>
+</tr>
+<tr>
+<td>noscreen</td>
+<td>布尔值。是否不再屏幕上显示通知信息。默认<code>false</code>, 表示要在屏幕上显示通知内容。
+<p><img data-src="http://image.zhangxinxu.com/image/blog/201607/notice-iphone.jpg" width="250" height="424" alt="显示桌面通知" class="alignnone" src="http://image.zhangxinxu.com/image/blog/201607/notice-iphone.jpg"></p>
+</td>
+</tr>
+<tr>
+<td>sticky</td>
+<td>布尔值。是否通知具有粘性，这样用户不太容易清除通知。默认<code>false</code>, 表示没有粘性。根据我自己的猜测，应该和<code>position</code>的<code>sticky</code>属性值类似。</td>
+</tr>
+</tbody>
   </body>
   <script type="text/javascript">
-    
+    //传统方式对通知的处理 其实就是使用js对title进行修改
+    setInterval(function(){
+          var title = document.title;
+          if(isShine == true){
+            if(/新/.test(title) == 'false'){
+                document.title = "【你有新的消息】";
+            }else{
+                document.title = "【】";
+            }
+          }else{
+              document.title = titleInit;
+          }
+    },500);
+    //浏览器的窗口失去焦点和得到焦点
+    //chrome和FF是windows的focus 和 onBlur方法  但是IE是 document的onFoucs，onFoucusout
+    window.onfocus = function() { };
+    window.onblur = function() { };
+
+    // for IE
+    document.onfocusin = function() { };
+    document.onfocusout = function() { };
+    //复杂的场景 需要 用addEventListener attchEvent进行事件绑定
+    //新方法  facebook的消息通知 和  腾讯奥运的时候
+    //IE14以及其他桌面浏览器都支持Web Notification，目前移动端的支持情况并不好，Android部分支持，iOS Safari浏览器全军覆没(至9.3版本)：
+    window.Notification
+    Notification.requestPermission(callback);
+    Notification.requestPermission().then(function(permission) { ... });
+    //只会是granted, denied, 或default.
+  // 其中granted表示用户允许通知，denied表示用户嫌弃你，default表示用户目前还没有管你。
+    new Notification(title, options);  //title是必须的 options值可选
+    Notification.close();// 通知关闭
+    Notification.onclick(); //事件句柄  点击通知后的处理方式
+    Notification.onerror(); //通知显示异常，然后。例如，明明Notification.permission是default，你还让我显示。
+    // 下面这些呢有必要独立出来，虽然现在是支持挺好的，但是，由于目前规范并没有把它们列入其中，所以，未来有可能浏览器就不支持了。
+    Notification.onclose
+    // 通知关闭了，然后…… 无论是用户手动关闭，还是直接Notification.close()关闭都会触发该该事件。
+    Notification.onshow
+    // 通知显示的时候，该干嘛干嘛~~
+    Notification.title[只读]
+
+    Notification.dir[只读]
+
+    Notification.lang[只读]
+
+    Notification.body[只读]
+
+    Notification.tag[只读]
+
+    Notification.icon[只读]
+
+    Notification.data[只读]
+
+    Notification.silent[只读]
+
+    Notification.title[只读]
+
+    Notification.timestamp[只读]
+    // 通知创建或者可以使用的时间。
+
+    Notification.noscreen[只读]
+
+    Notification.renotify[只读]
+
+    Notification.sound[只读]
+    Notification.sticky[只读]
+
+    Notification.vibrate[只读]
+
+    if (window.Notification) {
+      var button = document.getElementById('button'), text = document.getElementById('text');
+
+      var popNotice = function() {
+          if (Notification.permission == "granted") {
+              var notification = new Notification("Hi，帅哥：", {
+                  body: '可以加你为好友吗？',
+                  icon: 'http://image.zhangxinxu.com/image/study/s/s128/mm1.jpg'
+              });
+
+              notification.onclick = function() {
+                  text.innerHTML = '张小姐已于' + new Date().toTimeString().split(' ')[0] + '加你为好友！';
+                  notification.close();
+              };
+          }
+      };
+
+      button.onclick = function() {
+          if (Notification.permission == "granted") {
+              popNotice();
+          } else if (Notification.permission != "denied") {
+              Notification.requestPermission(function (permission) {
+                popNotice();
+              });
+          }
+      };
+} else {
+    alert('浏览器不支持Notification');
+}
+
+
   </script>
 </html>
