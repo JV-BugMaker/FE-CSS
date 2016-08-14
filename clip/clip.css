@@ -1,0 +1,26 @@
+.clip[style] {
+    opacity: 0;
+}
+.active .clip:not([style]) {
+    opacity: 0;
+    animation: fadeIn .1s .4s both;
+}
+.active .clip[style] {
+    will-change: transform;
+    animation: noTransform .5s both;
+}
+
+@keyframes noTransform {
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) rotate(0);
+    }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.box { height: 190px; }
+.text { position: absolute; width: 300px; }
+.image { position: absolute;width: 200px;height: 200px;}
