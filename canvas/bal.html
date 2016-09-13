@@ -1,0 +1,137 @@
+<!DOCTYPE>
+
+<html>
+
+<head>
+
+    <title>canvas 弹球游戏</title>
+
+    <style>
+
+    </style>
+
+</head>
+
+<body>
+
+    <canvas id="canvas" class="canvas" width='400px' height='300px'>Your browser does not support the HTML5 element canvas</canvas>
+
+    <script>
+
+        var boxX = 20,
+
+            boxY = 30, //盒子的左上角 x y 的初始位置
+
+            boxWidth = 350,
+
+            boxHeight = 250, //盒子的宽高
+
+            ballRad = 10, // 球的半径
+
+            boxRoundX = boxWidth + boxX, //右边界
+
+            boxRoundY= boxHeight + boxY, //下边界
+
+            inboxRoundX = boxX - ballRad, //左边界
+
+            inboxRoundY= boxY - ballRad, // 上边界
+
+            ballX = 50,
+
+            ballY = 60, //球的初始位置 
+
+            ballVX = 4, //初始水平位移
+
+            ballVY= 8; //初始垂直位移
+
+        function init () {
+
+            var ctx = document.getElementById('canvas').getContext('2d');
+
+            ctx.linewidth = ballRad;
+
+            ctx.fillStyle = 'rgb(200, 0, 50)';
+
+            moveBall();
+
+            setInterval(moveBall, 25);
+
+
+
+            // 移动球的函数
+
+            function moveBall () {
+
+                ctx.clearRect(boxX, boxY, boxWidth, boxHeight);
+
+                changDirect();
+
+                ctx.beginPath();
+
+                ctx.arc(ballX, ballY, ballRad, 0, Math.PI * 2, false);
+
+                ctx.fill();
+
+                ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+
+            }
+
+
+
+            // 判断距离方向函数
+
+            function changDirect () {
+
+                var nextX = ballX - ballVX,
+
+                    nextY = ballY - ballVY;
+
+                if (nextX > boxRoundX) {
+
+                    ballVX = -ballVX;
+
+                    nextX = boxRoundX;
+
+                }
+
+                if (nextX < inboxRoundX) {
+
+                    ballVX = -ballVX;
+
+                    nextX = inboxRoundX;
+
+                }
+
+                if (nextY > boxRoundY) {
+
+                    ballVY = -ballVY;
+
+                    nextY = boxRoundY;
+
+                }
+
+                if (nextY < inboxRoundY) {
+
+                    ballVY = -ballVY;
+
+                    nextY = inboxRoundY;
+
+                }
+
+                ballX = nextX;
+
+                ballY = nextY;
+
+            }
+
+        }
+
+
+
+        init();
+
+    </script>
+
+</body>
+
+</html>

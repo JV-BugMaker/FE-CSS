@@ -1,0 +1,123 @@
+<html>
+<head>
+<script>
+	window.onload = function() {
+		clockHand();
+	};
+	
+	function clockHand() {
+		var canvas = document.getElementById("canvas1");
+		ctx = canvas.getContext("2d");
+		ctx.clearRect(0, 0, 500, 500);
+		
+		// create background rectangle
+		// ctx.lineWidth = 10;  
+		ctx.fillStyle = "gray";
+		ctx.fillRect(0,0,500,500);
+		
+		// draw frame
+		ctx.lineWidth = 10;  
+		ctx.strokeStyle = "green";
+		ctx.strokeRect(0,0,500,500);
+		
+		// draw author infomation
+		ctx.fillStyle = "blue";
+		ctx.font = "20px Times New Roman";
+		
+		// draw inner rectangle
+		ctx.lineWidth = 10;  
+		ctx.strokeStyle = "black";
+		ctx.strokeRect(45,45,400,400);
+		
+		// create background image
+		var img=new Image();
+		img.src="background.png";
+		img.onload = function() { 
+		    ctx.drawImage(img,45,45,400,400);
+		    ctx.save();
+			// draw marker unit
+			ctx.lineWidth = 2;
+		    ctx.fillStyle = "purple";
+		    ctx.strokeStyle = "black";
+		    var sin = Math.sin(Math.PI/6);  
+		    var cos = Math.cos(Math.PI/6); 
+		    ctx.translate(245, 245);
+		    for (var i=0; i <= 12; i++) {  
+		    	// top
+				ctx.fillRect(160,-7.5,30,10);
+				ctx.strokeRect(160,-7.5,30,10);
+				ctx.transform(cos, sin, -sin, cos, 0, 0);  	
+		    }
+		    
+		    // transform back center point
+		    
+		    // ctx.translate(245, 245);
+		    var sin = Math.sin(Math.PI/30);  
+		    var cos = Math.cos(Math.PI/30); 
+		    for (var i=0; i <= 60; i++) {  
+				ctx.fillRect(170,-5,10,2);
+				ctx.transform(cos, sin, -sin, cos, 0, 0); 	
+		    }
+		    ctx.restore();
+		    // top
+			ctx.fillText("12", 233,100);
+			
+			// bottom
+			ctx.fillText("6", 240,400);
+			
+			// left
+			ctx.fillText("9", 90,252);
+			
+			// right
+			ctx.fillText("3", 395,250);
+			
+			// get time
+			ctx.save();
+			ctx.translate(245, 245);
+			ctx.save();
+			
+			// dynamic show time
+			var now=new Date();
+			var hrs=now.getHours();
+			var min=now.getMinutes();
+			var sec=now.getSeconds();
+
+			//Draw hour hand
+			ctx.rotate(Math.PI/6*(hrs+(min/60)+(sec/3600)));
+			ctx.beginPath();
+			ctx.moveTo(0,10);
+			ctx.lineTo(0,-60);
+			ctx.stroke();
+			ctx.restore();
+			ctx.save();
+			
+			//Draw minute hand
+			ctx.rotate(Math.PI/30*(min+(sec/60)));
+			ctx.beginPath();
+			ctx.moveTo(0,20);
+			ctx.lineTo(0,-110);
+			ctx.stroke();
+			ctx.restore();
+			ctx.save();
+			
+			//Draw second hand
+			ctx.rotate(Math.PI/30*sec);
+			ctx.strokeStyle="#E33";
+			ctx.lineWidth = 2;
+			ctx.beginPath();
+			ctx.moveTo(0,20);
+			ctx.lineTo(0,-110);
+			ctx.stroke();
+			ctx.restore();
+			
+			// finally store to originall point
+			ctx.restore();
+			setTimeout(clockHand,1000);
+		};
+	}
+</script>
+</head>
+<body bgcolor="#E6E6FA">
+	<canvas id="canvas1" width="500" height="500">electronic clock</canvas>
+</body>
+</html>
