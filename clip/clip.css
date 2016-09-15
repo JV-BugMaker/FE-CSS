@@ -5,6 +5,9 @@
     opacity: 0;
     animation: fadeIn .1s .4s both;
 }
+/*.active .clip[style]这段CSS表示的意思是，只要被剪裁的三角们的父级有了类名active,
+所有的三角的位置就不是随机分布，而是会以动画形式归位到其原本的位置。
+没错，是所有，我们没有必要对每一个剪裁的三角碎片做动画，只要归位就可以。*/
 .active .clip[style] {
     will-change: transform;
     animation: noTransform .5s both;
