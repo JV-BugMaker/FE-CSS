@@ -25,3 +25,13 @@
 * css3中设置[att^=val],比如a[href^='http://'],如果是http://开头那就是执行下面的样式
 * css3中设置[att$=val],比如a[href^='.pdf'],如果是.pdf结尾那就是执行下面的样式
 * IE专用开启背景图缓存 filter:expression(document.execCommand("BackgroundImageCache",false,true));
+
+## 表格
+
+* cation:表格标题
+* summer:表格标签，类似于img alt属性
+* border-collapse 属性设置表格的边框是否被合并为一个单一的边框，还是象在标准的 HTML 中那样分开显示.
+	1. separate:默认值。边框会被分开。不会忽略 border-spacing 和 empty-cells 属性。
+	2. collapse:如果可能，边框会合并为一个单一的边框。会忽略 border-spacing 和 empty-cells 属性。
+	3. inherit:规定应该从父元素继承 border-collapse 属性的值。
+*
